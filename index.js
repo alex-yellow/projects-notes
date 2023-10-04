@@ -91,6 +91,26 @@ app.post('/edit-project/:id', function(req, res){
     }
 });
 
+app.get('/delete-project/:id', function(req, res){
+    const id = req.params.id;
+    const sqlFind = 'SELECT * FROM projects WHERE id=?';
+    db.query(sqlFind, [id], function(error, projects, fields){
+        if(error) throw error;
+        const project = projects[0];
+        if(project){
+            const sqlDel = 'DELETE FROM projects WHERE id=?';
+            db.query(sqlDel, [id], function(error, result, fields){
+                if(error) throw error;
+                req.session.delete = `Project ${project.name} delete success!`;
+                res.redirect('/');
+            });
+        }
+        else{
+            res.render('error', {title:'Project not found', text:'Project not found'});
+        }
+    });
+});
+
 app.use(function(req, res){
     res.render('error', {title:'Not found', text:'Not found'});
 });
