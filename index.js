@@ -31,6 +31,7 @@ app.use(expsession({
 app.get('/', function(req, res){
     const sqlSel = 'SELECT * FROM projects';
     db.query(sqlSel, function(error, projects, fields){
+        if(error) throw error;
         if(projects){
             res.render('projects', {title:'Projects', projects});
         }
@@ -39,6 +40,26 @@ app.get('/', function(req, res){
         }
     });
 });
+
+app.get('/add-project', function(req, res){
+    res.render('add-project', {title:'Add project'});
+});
+
+app.post('/add-project', function(req, res){
+    const name = req.body.name;
+    const sqlAdd = 'INSERT INTO projects (name) VALUES (?)';
+    if(name != undefined && name != null){
+        db.query(sqlAdd, [name], function(error, result, fields){
+            if(error) throw error;
+            req.session.add = `Project ${name} added success!`;
+            res.redirect('/');
+        });
+    }
+    else{
+        res.render('error', {title:'Project is null', text:'Project is null'});
+    }
+});
+
 
 app.use(function(req, res){
     res.render('error', {title:'Not found', text:'Not found'});
