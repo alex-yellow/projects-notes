@@ -4,3 +4,5 @@ setTimeout(function(){
         mess[i].innerHTML = null;
     }
 }, 3000);
+
+console.log('Hello');
