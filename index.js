@@ -33,7 +33,7 @@ app.get('/', function(req, res){
     db.query(sqlSel, function(error, projects, fields){
         if(error) throw error;
         if(projects){
-            res.render('projects', {title:'Projects', projects});
+            res.render('projects', {title:'Projects', projects, add:req.session.add, edit:req.session.edit, delete:req.session.delete});
         }
         else{
             res.render('error', {title:'Projects not found', text:'Projects not found'});
@@ -60,6 +60,36 @@ app.post('/add-project', function(req, res){
     }
 });
 
+app.get('/edit-project/:id', function(req, res){
+    const id = req.params.id;
+    const sqlFind = 'SELECT * FROM projects WHERE id=?';
+    db.query(sqlFind, [id], function(error, projects, fields){
+        if(error) throw error;
+        const project = projects[0];
+        if(project){
+            res.render('edit-project', {title: `Project ${project.name}`, project});
+        }
+        else{
+            res.render('error', {title:'Project not found', text:'Project not found'});
+        }
+    });
+});
+
+app.post('/edit-project/:id', function(req, res){
+    const id = req.params.id;
+    const name = req.body.name;
+    const sqlEdit = 'UPDATE projects SET name=? WHERE id=?';
+    if(name != undefined && name != null){
+        db.query(sqlEdit, [name, id], function(error, result, fields){
+            if(error) throw error;
+            req.session.edit = `Project ${name} edit success!`;
+            res.redirect('/');
+        });
+    }
+    else{
+        res.render('error', {title:'Project is null', text:'Project is null'});
+    }
+});
 
 app.use(function(req, res){
     res.render('error', {title:'Not found', text:'Not found'});
