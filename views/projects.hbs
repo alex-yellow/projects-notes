@@ -1,0 +1,32 @@
+<h1>Projects</h1>
+
+<table>
+    <thead> 
+        <th>Projects</th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody>
+        {{#each projects}}
+            <tr>
+                {{#if completed}}
+                <td style="text-decoration: line-through;">{{name}}</td>
+                <td><a href="/complete/{{id}}">Uncomplete</a></td>
+                {{else}}
+                <td>{{name}}</td>
+                <td><a href="/complete/{{id}}">Complete</a></td>
+                {{/if}}
+                <td><a href="/edit/{{id}}">Edit</a></td>
+                <td><a href="/delete/{{id}}">Delete</a></td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="mess">{{add}}</div>
+<div class="mess">{{edit}}</div>
+<div class="mess">{{delete}}</div>
+<div class="mess">{{complete}}</div>
+
+<h3><a href="/add">Add Project</a></h3>
