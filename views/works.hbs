@@ -12,13 +12,13 @@
             <tr>
                 {{#if completed}}
                 <td style="text-decoration: line-through;">{{name}}</td>
-                <td><a href="/complete/{{id}}">Uncomplete</a></td>
+                <td><a href="/works/{{id}}/complete">Uncomplete</a></td>
                 {{else}}
                 <td>{{name}}</td>
-                <td><a href="/complete/{{id}}">Complete</a></td>
+                <td><a href="/works/{{id}}/complete">Complete</a></td>
                 {{/if}}
                 <td><a href="/works/{{id}}/edit">Edit</a></td>
-                <td><a href="/delete-work/{{id}}">Delete</a></td>
+                <td><a href="/works/{{id}}/delete">Delete</a></td>
             </tr>
         {{/each}}
     </tbody>

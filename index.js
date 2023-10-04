@@ -101,6 +101,10 @@ app.get('/delete-project/:id', function(req, res){
             const sqlDel = 'DELETE FROM projects WHERE id=?';
             db.query(sqlDel, [id], function(error, result){
                 if(error) throw error;
+                const sqlDelWorks = 'DELETE FROM works WHERE project_id=?';
+                db.query(sqlDelWorks, [id], function(error, result){
+                    if(error) throw error;
+                });
                 req.session.delete = `Project ${project.name} delete success!`;
                 res.redirect('/');
             });
@@ -205,6 +209,48 @@ app.post('/works/:id/edit', function(req, res){
     else{
         res.render('error', {title:'Work is null', text:'Work is null'});
     }
+});
+
+app.get('/works/:id/delete', function(req, res){
+    const id = req.params.id;
+    const sqlFindWork = 'SELECT * FROM works WHERE id=?';
+    db.query(sqlFindWork, [id], function(error, works){
+        if(error) throw error;
+        const work = works[0];
+        const projectId = work.project_id;
+        if(work){
+            const sqlDelWorks = 'DELETE FROM works WHERE id=?';
+            db.query(sqlDelWorks, [id], function(error, result){
+                if(error) throw error;
+                req.session.deleteWork = `Work ${work.name} delete success!`;
+                res.redirect(`/projects/${projectId}/works`);
+            });
+        }   
+        else{
+            res.render('error', {title:'Work not found', text:'Work not found'});
+        }
+    });
+});
+
+app.get('/works/:id/complete', function(req, res){
+    const id = req.params.id;
+    const sqlComWork = 'SELECT * FROM works WHERE id=?';
+    db.query(sqlComWork, [id], function(error, works){
+        const work = works[0];
+        const projectId = work.project_id;
+        if(work){
+            const complete = !work.completed;
+            const sqlComWork = 'UPDATE works SET completed=? WHERE id=?';
+            db.query(sqlComWork, [complete, id], function(error, result){
+                if(error) throw error;
+                req.session.completeWork = `Work ${work.name} update complete success!`;
+                res.redirect(`/projects/${projectId}/works`);
+            });
+        }
+        else{
+            res.render('error', {title:'Work not found', text:'Work not found'});
+        }
+    });
 });
 
 app.use(function(req, res){

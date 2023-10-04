@@ -10,13 +10,7 @@
     <tbody>
         {{#each projects}}
             <tr>
-                {{#if completed}}
-                <td style="text-decoration: line-through;"><a href="/projects/{{id}}/works">{{name}}</a></td>
-                <td><a href="/complete/{{id}}">Uncomplete</a></td>
-                {{else}}
                 <td><a href="/projects/{{id}}/works">{{name}}</a></td>
-                <td><a href="/complete/{{id}}">Complete</a></td>
-                {{/if}}
                 <td><a href="/edit-project/{{id}}">Edit</a></td>
                 <td><a href="/delete-project/{{id}}">Delete</a></td>
             </tr>
